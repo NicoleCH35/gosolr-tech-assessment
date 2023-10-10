@@ -5,7 +5,7 @@
 `cd frontend && npm run start`
 
 **Backend**\
-`cd backend && node app.js`
+`cd backend && npm run start`
 
 ## User Story
 As a GoSolr customer I want to provide details about my home so that the software can recommend a solar PV solution that would suit my needs and indicate how much I can expect to save on my electricity bill.
