@@ -12,3 +12,13 @@
   font-family: 'PoppinsSemiBold';
   src: url('./fonts/Poppins-SemiBold.ttf');
 }
+
+@font-face {
+  font-family: 'PoppinsBold';
+  src: url('./fonts/Poppins-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'PoppinsExtraBold';
+  src: url('./fonts/Poppins-ExtraBold.ttf');
+}

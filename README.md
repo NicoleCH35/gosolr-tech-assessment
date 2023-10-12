@@ -32,8 +32,8 @@ As a GoSolr customer I want to provide details about my home so that the softwar
 | ----------- | ----------- | ----------- | ----------- |
 | Small | 1399 | 10 | 12 |
 | Medium | 1740 | 14 | 16 |
-| Large | 2900 | 18 | 26 |
-| Extra Large | 4400 | 28 | 36 |
+| Large | 2900 | 20 | 28 |
+| Extra Large | 4400 | 30 | 40 |
 
 ## Calculations
 **Key**\
@@ -68,7 +68,7 @@ case UI >= 5000: Extra Large
 Average Daily Production
 DO =
 Switch (RS.name)
-case Small: Math.min([RS.AvgDailyProduction, (MC / 30) * 0.85])
+case Small: Math.min(RS.AvgDailyProduction, ((MC / 30) * 0.85))
 case Medium:
 case Large:
 case Extra Large:
@@ -77,7 +77,7 @@ case Extra Large:
 Production If Adjusts
 DO =
 Switch (RS.name)
-case Small: Math.min([RS.ProductionIfAdjusts, (MC / 30) * 0.85])
+case Small: Math.min(RS.ProductionIfAdjusts, ((MC / 30) * 0.85))
 case Medium:
 case Large:
 case Extra Large:

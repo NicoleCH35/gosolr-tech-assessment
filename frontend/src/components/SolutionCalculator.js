@@ -4,23 +4,13 @@ import theme from '../utils/theme';
 import { isMobile } from 'react-device-detect';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
-const icon = require('../images/SolarSolution.png');
-
-const styles = {
-    row: {
-        padding: 50,
-        width: '100%',
-        justifyContent: 'center',
-        textAlign: 'center',
-    }
-};
+import Solution from './Solution';
 
 const validationSchema = yup.object({
     spend: yup
         .number()
+        .positive('Electricity spend must be a positive number.')
         .required('Electricity spend is required.')
-        .test('Positive number', 'Electricity spend must be a positive number.', (v) => v >= 0),
 });
 
 const SolutionCalculator = ({}) => {
@@ -32,16 +22,23 @@ const SolutionCalculator = ({}) => {
     
     const getRecommededSolution = (spend) => {
         setLoading(true);
+        setSolution({});
         fetch(`/getRecommededSolution/${spend}`)
             .then(async (res) => {
                 const body = await res.json();
-                console.log('getRecommededSolution', body);
+                if (body?.error){
+                    messageApi.open({
+                        type: 'error',
+                        content: body?.message || 'An unknown error occurred.',
+                    });
+                    return;
+                }
+                setSolution(body);
             })
             .catch((e) => {
-                console.log('the error', e);
                 messageApi.open({
                     type: 'error',
-                    content: 'This is an error message',
+                    content: 'An unknown error occurred.',
                 });
             })
             .then(() => {
@@ -53,16 +50,9 @@ const SolutionCalculator = ({}) => {
         initialValues: {
             spend: 0,
         },
-        validateOnChange: false,
-        validateOnBlur: false,
         validationSchema,
         onSubmit: (values) => {
-            console.log('values', values);
-            formik.validateForm('spend')
-            .then((r) => {
-                console.log('r', r);
-            });
-            // getRecommededSolution(values.spend);
+            getRecommededSolution(values.spend);
         },
     });
 
@@ -70,16 +60,18 @@ const SolutionCalculator = ({}) => {
         <Card bordered={false} style={isMobile ? { margin: 15, width: '80%' } : {width: '80%', height: '80%'} }>
             {contextHolder}
             <Row align="middle" justify={'center'}>
-                <Form name="electricitySpendForm" onFinish={formik.handleSubmit} layout='vertical'>
+                <Form name="electricitySpendForm" onFinish={formik.handleSubmit} layout='vertical' initialValues={{ spend: 0 }}>
                     <Col align="middle" justify={'center'}>
                         <Space direction='vertical'>
                             <Title level={isMobile ? 5 : 4} style={{ marginTop: 5, width: '70%' }}>How much do you currently spend on electricity per month?</Title>
-                            <Form.Item name='spend'>
+                            <Form.Item name="spend" extra={formik.submitCount > 0 && formik.errors.spend ? formik.errors.spend : ""}>
                                 <InputNumber
                                     min={0}
+                                    value={formik.values.spend}
                                     size='large'
                                     addonBefore="R"
                                     style={{width: '70%'}}
+                                    name="spend"
                                     onChange={(value) => { formik.setFieldValue('spend', value); }}
                                 />
                             </Form.Item>
@@ -104,8 +96,8 @@ const SolutionCalculator = ({}) => {
                         </Space>
                     </Col>
                 </Form>
-                <Divider style={{ backgroundColor: theme.colors.accentDark, height: 2 }} />
-                {<img src={icon} alt={'solar solution'} style={{ width: '100%'}}/>}
+                <Divider style={{ backgroundColor: theme.colors.tertiary, height: 2, margin: 10 }} />
+                <Solution loading={loading} name={solution.solution} price={solution.cost} savings={solution.savings_gosolr} differences={solution.difference} totals={solution.total_cost} />
             </Row>
         </Card>
     );

@@ -11,6 +11,8 @@ const typefaces = {
         extraLight: 'PoppinsExtraLight',
         regular: 'PoppinsRegular',
         semiBold: 'PoppinsSemiBold',
+        bold: 'PoppinsBold',
+        extraBold: 'PoppinsExtraBold',
     }
 };
 

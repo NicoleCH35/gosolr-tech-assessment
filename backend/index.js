@@ -21,14 +21,14 @@ const SOLUTIONS = {
   large: {
     name: "Large",
     cost: 2900,
-    average_daily_production: 18,
-    production_if_adjusts: 26,
+    average_daily_production: 20,
+    production_if_adjusts: 28,
   },
   extra_large: {
     name: "Extra Large",
     cost: 4400,
-    average_daily_production: 28,
-    production_if_adjusts: 36,
+    average_daily_production: 30,
+    production_if_adjusts: 40,
   },
 
 };
@@ -49,13 +49,13 @@ const getRecommededSolution = (currentSpend) => {
 };
 
 const getMonthlyConsumption = (currentSpend) => (
-  Math.round(currentSpend > (TARIFF_BELOW_600 * 600) ? (((currentSpend - (600 * TARIFF_BELOW_600)) / TARIFF_ABOVE_600) + 600) : (currentSpend / TARIFF_BELOW_600))
+  currentSpend > (TARIFF_BELOW_600 * 600) ? (((currentSpend - (600 * TARIFF_BELOW_600)) / TARIFF_ABOVE_600) + 600) : (currentSpend / TARIFF_BELOW_600)
 );
 
-const getExpectedOutput = (name, production) => {
+const getExpectedOutput = (name, production, consumption) => {
   switch(name){
     case 'Small':
-      const daily = Math.min([production, (consumption / 30) * 0.85]);
+      const daily = Math.min(production, ((consumption / 30) * 0.85));
       return {
         daily,
         monthly: daily * 30,
@@ -101,8 +101,8 @@ app.get('/getRecommededSolution/:spend', (req, res) => {
 
   const monthlyConsumption = getMonthlyConsumption(currentSpend);
 
-  const expectedAverageProduction = getExpectedOutput(recommededSolution.name, recommededSolution.average_daily_production);
-  const expectedAdjusmentProduction = getExpectedOutput(recommededSolution.name, recommededSolution.production_if_adjusts);
+  const expectedAverageProduction = getExpectedOutput(recommededSolution.name, recommededSolution.average_daily_production, monthlyConsumption);
+  const expectedAdjusmentProduction = getExpectedOutput(recommededSolution.name, recommededSolution.production_if_adjusts, monthlyConsumption);
 
   const averageSavings = getSavings(monthlyConsumption, expectedAverageProduction.monthly);
   const adjustmentSavings = getSavings(monthlyConsumption, expectedAdjusmentProduction.monthly);
