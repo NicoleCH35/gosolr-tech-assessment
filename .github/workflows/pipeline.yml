@@ -14,9 +14,9 @@ jobs:
         with:
           node-version: 18
       - name: NPM Install and Build
-      - run: cd frontend
-      - run: npm install
-      - run: npm run build
+        run: cd frontend
+        run: npm install
+        run: npm run build
       - name: Upload Atrifact
         uses: actions/upload-artifact@v3
         with:
