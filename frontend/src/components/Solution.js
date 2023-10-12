@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Row, Space, Spin, Table, Col, Descriptions } from 'antd';
+import { Typography, Row, Space, Spin, Col, Descriptions } from 'antd';
 import { isMobile } from 'react-device-detect';
 import theme from '../utils/theme';
 

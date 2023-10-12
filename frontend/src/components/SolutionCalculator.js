@@ -13,7 +13,7 @@ const validationSchema = yup.object({
         .required('Electricity spend is required.')
 });
 
-const SolutionCalculator = ({}) => {
+const SolutionCalculator = () => {
     const [loading, setLoading] = useState(false);
     const [solution, setSolution] = useState({});
 
