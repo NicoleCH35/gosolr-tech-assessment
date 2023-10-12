@@ -24,6 +24,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Frontend Directory
+        run: cd frontend
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
