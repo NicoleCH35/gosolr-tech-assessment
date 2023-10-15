@@ -4,6 +4,8 @@ const colors = {
     tertiary: '#F0F0F0',
     accentLight: '#FFDC00',
     accentDark: '#FFBE00',
+    success: '#389E0D',
+    danger: '#CF1322',
 };
 
 const typefaces = {

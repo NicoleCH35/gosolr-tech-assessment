@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Row, Space, Spin, Col, Descriptions } from 'antd';
+import { Typography, Row, Space, Spin, Col, Table, Descriptions } from 'antd';
 import { isMobile } from 'react-device-detect';
 import theme from '../utils/theme';
 
 const icon = require('../images/SolarSolution.png');
 
 const Solution = (props) => {
-    const { loading, name, price, savings, totals, differences } = props;
+    const { loading, spend, name, price, savings, totals, differences } = props;
     const { Title, Text } = Typography;
 
     if (loading){
@@ -15,7 +15,7 @@ const Solution = (props) => {
     }
 
     if (!name){
-        return (<img src={icon} alt={'solar solution'} style={{ width: '100%'}}/>);
+        return (<img src={icon} alt={'solar solution'} style={{ width: isMobile ? '70vw' : ''}}/>);
     }
 
     return (
@@ -25,6 +25,7 @@ const Solution = (props) => {
                     style={{
                         display: 'flex',
                         width: '100%',
+                        height: '100%',
                         backgroundColor: theme.colors.primary,
                         borderBottomLeftRadius: '50%',
                         borderBottomRightRadius: '50%',
@@ -42,22 +43,122 @@ const Solution = (props) => {
             </Row>
 
             <Row style={{ width: '100%', paddingTop: 25 }} gutter={16}>
-                <Col span={isMobile ? 24 : 12}>
-                    <Text strong>Pricing based on average usage</Text>
-                    <Descriptions bordered size='small'>
-                        <Descriptions.Item label="Savings" span={3}>{`R ${Math.round(savings.average)}`}</Descriptions.Item>
-                        <Descriptions.Item label="Total Cost" span={3}>{`R ${Math.round(totals.average)}`}</Descriptions.Item>
-                        <Descriptions.Item label="Difference" span={3}>{`R ${Math.round(differences.average)}`}</Descriptions.Item>
-                    </Descriptions>
-                </Col>
-                <Col span={isMobile ? 24 : 12}>
-                    <Text strong>Pricing if you adjust your habits slightly</Text>
-                    <Descriptions bordered size='small'>
-                        <Descriptions.Item label="Savings" span={3}>{`R ${Math.round(savings.adjustments)}`}</Descriptions.Item>
-                        <Descriptions.Item label="Total Cost" span={3}>{`R ${Math.round(totals.adjustments)}`}</Descriptions.Item>
-                        <Descriptions.Item label="Difference" span={3}>{`R ${Math.round(differences.adjustments)}`}</Descriptions.Item>
-                    </Descriptions>
-                </Col>
+                {
+                    isMobile ? (
+                        <>
+                            <Col span={24} style={{ paddingBottom: 10}}>
+                                <Text strong>Current Solution</Text>
+                                <Descriptions bordered size='small'>
+                                    <Descriptions.Item label="Savings" span={3}>{`R ${Math.round(savings.average)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Total Cost" span={3}>{`R ${Math.round(totals.average)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Difference" span={3}>{`R ${Math.round(differences.average)}`}</Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                            <Col span={24} style={{ paddingBottom: 10}}>
+                                <Text strong>Recommended Solution (Average)</Text>
+                                <Descriptions bordered size='small'>
+                                    <Descriptions.Item label="Savings" span={3}>{`R ${Math.round(savings.average)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Total Cost" span={3}>{`R ${Math.round(totals.average)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Difference" span={3}>{`R ${Math.round(differences.average)}`}</Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                            <Col span={24} style={{ paddingBottom: 10}}>
+                                <Text strong>Recommended Solution (Adjustments)</Text>
+                                <Descriptions bordered size='small'>
+                                    <Descriptions.Item label="Savings" span={3}>{`R ${Math.round(savings.adjustments)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Total Cost" span={3}>{`R ${Math.round(totals.adjustments)}`}</Descriptions.Item>
+                                    <Descriptions.Item label="Difference" span={3}>{`R ${Math.round(differences.adjustments)}`}</Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                        </>
+                    ) : (
+                    <Table
+                        pagination={false}
+                        columns={[
+                            {
+                                title: '',
+                                dataIndex: 'key',
+                                rowScope: 'row',
+                            },
+                            {
+                                title: 'Current Solution',
+                                dataIndex: 'current_solution',
+                            },
+                            {
+                                title: 'Recommended Solution (Average)',
+                                dataIndex: 'receommeded_solution_average',
+                            },
+                            {
+                                title: 'Recommended Solution (Adjustments)',
+                                dataIndex: 'receommeded_solution_adjustment',
+                            },
+                        ]}
+                        dataSource={[
+                            {
+                                key: 'Description',
+                                current_solution: 'Below you will see how your current solution compares to our recommended solution.',
+                                receommeded_solution_average: 'Keep using your electricity exactly as you are and we can offer you our recommended solution based on average electricity usage.',
+                                receommeded_solution_adjustment: 'Make a few adjustments to the way you use electricity and we could offer you the package below.',
+                            },
+                            {
+                                key: 'Load Shedding',
+                                current_solution: <Text>Yes</Text>,
+                                receommeded_solution_average: <Text>No</Text>,
+                                receommeded_solution_adjustment: <Text>No</Text>,
+                            },
+                            {
+                                key: 'Total Cost',
+                                current_solution: `R ${Math.round(spend)}`,
+                                receommeded_solution_average: (
+                                    <Text
+                                        style={{ color: spend < totals.average ? theme.colors.danger : theme.colors.success }}
+                                    >
+                                        {`R ${Math.round(totals.average)}`}
+                                    </Text>
+                                ),
+                                receommeded_solution_adjustment: (
+                                    <Text
+                                        style={{ color: spend < totals.adjustments ? theme.colors.danger : theme.colors.success }}
+                                    >
+                                        {`R ${Math.round(totals.adjustments)}`}
+                                    </Text>
+                                ),
+                            },
+                            {
+                                key: 'Savings with GoSolr',
+                                current_solution: '-',
+                                receommeded_solution_average: (
+                                    <Text>
+                                        {`R ${Math.round(savings.average)}`}
+                                    </Text>
+                                ),
+                                receommeded_solution_adjustment: (
+                                    <Text>
+                                        {`R ${Math.round(savings.adjustments)}`}
+                                    </Text>
+                                ),
+                            },
+                            {
+                                key: 'Difference',
+                                current_solution: '-',
+                                receommeded_solution_average: (
+                                    <Text
+                                        style={{ color: differences.average > 0 ? theme.colors.danger : theme.colors.success }}
+                                    >
+                                        {`R ${Math.round(Math.abs(differences.average))}`}
+                                    </Text>
+                                ),
+                                receommeded_solution_adjustment: (
+                                    <Text
+                                        style={{ color: differences.adjustments > 0 ? theme.colors.danger : theme.colors.success }}
+                                    >
+                                        {`R ${Math.round(Math.abs(differences.adjustments))}`}
+                                    </Text>
+                                ),
+                            },
+                        ]}
+                    />)
+                }
             </Row>
         </div>
     );
@@ -66,6 +167,7 @@ const Solution = (props) => {
 Solution.propTypes = {
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    spend: PropTypes.number.isRequired,
     savings: PropTypes.object.isRequired,
     totals: PropTypes.object.isRequired,
     differences: PropTypes.object.isRequired,

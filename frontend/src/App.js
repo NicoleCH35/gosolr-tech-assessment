@@ -32,29 +32,25 @@ function App() {
       }}
     >
       <Row align='middle' justify='center' style={{ height: '100%', width: '100%'}}>
-        <Col span={isMobile ? 24 : 12}>
-          <Header heading={'Which solution best suits your needs?'} subHeading={'We aim to recommend a solution that best aligns with your needs based on your current electricity spend per month.'} />
-        </Col>
-        <Col span={isMobile ? 24 : 12}>
-          <div style={isMobile ? { width: '100%', ...styles.formContainer } : { width: '100%', ...styles.formContainer }}>
-            <Row
-              align={isMobile ? 'top' : 'middle'}
-              justify='center'
-              style={{ height: '100%', width: '100%'}}
-            >
-              <SolutionCalculator />
-            </Row>
-          </div>
-        </Col>
+        <Header heading={'Which solution best suits your needs?'} subHeading={'We aim to recommend a solution that best aligns with your needs based on your current electricity spend per month.'} />
+        <div style={{position: 'absolute', zIndex: -1}}>
+          <Particles
+            id="tsParticles"
+            init={initParticles}
+            options={{
+                ...particleOptions,
+            }}
+          />
+        </div>
       </Row>
-      <div style={{position: 'absolute', zIndex: -1}}>
-        <Particles
-          id="tsParticles"
-          init={initParticles}
-          options={{
-              ...particleOptions,
-          }}
-        />
+      <div style={isMobile ? { width: '100%', ...styles.formContainer } : { width: '100%', ...styles.formContainer }}>
+        <Row
+          align={isMobile ? 'top' : 'middle'}
+          justify='center'
+          style={{ height: '100%', width: '100%'}}
+        >
+          <SolutionCalculator />
+        </Row>
       </div>
      </ConfigProvider>
   );

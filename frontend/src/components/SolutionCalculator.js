@@ -57,7 +57,7 @@ const SolutionCalculator = () => {
     });
 
     return (
-        <Card bordered={false} style={isMobile ? { margin: 15, width: '80%' } : {width: '80%', height: '80%'} }>
+        <Card bordered={false} style={isMobile ? { margin: 15, width: '80%' } : { width: '80%', height: '' } }>
             {contextHolder}
             <Row align="middle" justify={'center'}>
                 <Form name="electricitySpendForm" onFinish={formik.handleSubmit} layout='vertical' initialValues={{ spend: 0 }}>
@@ -97,7 +97,7 @@ const SolutionCalculator = () => {
                     </Col>
                 </Form>
                 <Divider style={{ backgroundColor: theme.colors.tertiary, height: 2, margin: 10 }} />
-                <Solution loading={loading} name={solution.solution} price={solution.cost} savings={solution.savings_gosolr} differences={solution.difference} totals={solution.total_cost} />
+                <Solution loading={loading} spend={formik.values.spend} name={solution.solution} price={solution.cost} savings={solution.savings_gosolr} differences={solution.difference} totals={solution.total_cost} />
             </Row>
         </Card>
     );
